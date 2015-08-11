@@ -1,0 +1,27 @@
+{
+  "name": "commercetools/json-mapper",
+  "description": "description_text",
+  "license": "MIT",
+  "homepage": "https://github.com/ct-jensschulze/JsonMapper",
+  "support": {
+    "email": "jens.schulze@commercetools.de",
+    "issues": "https://github.com/ct-jensschulze/JsonMapper/issues",
+  },
+  "autoload": {
+    "psr-4": {
+      "Commercetools\\Commons\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "phpspec/phpspec": "~2.0"
+  },
+  "authors": [
+    {
+      "name": "Jens Schulze",
+      "email": "jens.schulze@commercetools.de"
+    }
+  ]
+}

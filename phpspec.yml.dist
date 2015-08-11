@@ -1,0 +1,5 @@
+suites:
+  commercetools_commons_suite:
+    namespace: Commercetools\Commons
+    psr4_prefix: Commercetools\Commons
+
