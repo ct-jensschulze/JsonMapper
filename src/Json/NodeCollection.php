@@ -6,6 +6,20 @@ use Commercetools\Commons\Json\Node;
 
 class NodeCollection extends Node implements \Iterator, \Countable, \ArrayAccess
 {
+    /**
+     * @param $context
+     * @return mixed
+     */
+    public static function of($context = null)
+    {
+        return static::createNodeObject('', [], $context);
+    }
+
+    public function toArray()
+    {
+        return (array)$this->data->getArrayCopy();
+    }
+
     public function getFirst()
     {
         $this->rewind();

@@ -14,8 +14,8 @@ class JsonMapperSpec extends ObjectBehavior
 
     function it_maps_json_string()
     {
-        $this->map('{"key":"value"}')->shouldHaveType('Commercetools\Commons\Json\Node');
+        $this->map('{"key":"value"}')->shouldHaveType('Commercetools\Commons\JsonObject');
         $this->map('[{"key":"value1"}, {"key":"value2"}]')
-            ->shouldHaveType('Commercetools\Commons\Json\NodeCollection');
+            ->shouldHaveType('Commercetools\Commons\JsonObject');
     }
 }

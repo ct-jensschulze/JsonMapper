@@ -3,6 +3,9 @@
 namespace spec\Commercetools\Commons\Json;
 
 use Commercetools\Commons\JsonMapper;
+use Commercetools\Commons\Money;
+use Commercetools\Commons\Price;
+use Commercetools\Commons\PriceCollection;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -57,15 +60,16 @@ class NodeSpec extends ObjectBehavior
 
     function it_test()
     {
+        $start = microtime(true);
         $mapper = new JsonMapper();
-        $d = $mapper->map('{"values":[{"centAmount": 100, "currency": "EUR"}]}');
+        $start = microtime(true);
+        $d = $mapper->map('[{"value": {"centAmount": 100, "currency": "EUR"}}]', '\Commercetools\Commons\PriceCollection');
 
-        $d->getValues()[] = (object)['centAmount' => 1000, ' currency' => 'EUR'];
-        $d->getValues()[1]->setCurrency('USD');
-        var_dump($d->getValues());
 
-        var_dump($d->getValues()->get(1)->getCentAmount());
+        $d->set(null, Price::of()->setValue(Money::of()->setCentAmount(1000)->setCurrencyCode('USD')));
+        $d->set(null, Price::of()->setValue(Money::of()->setCentAmount(5000)->setCurrencyCode('EUR')));
 
         var_dump(json_encode($d));
+        var_dump((microtime(true)-$start));
     }
 }

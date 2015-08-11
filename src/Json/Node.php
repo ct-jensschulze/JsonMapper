@@ -4,14 +4,16 @@ namespace Commercetools\Commons\Json;
 
 class Node implements \JsonSerializable
 {
+    protected $name;
     protected $root;
     protected $parent;
     protected $data;
     protected $initialized = [];
     protected $context;
 
-    final private function __construct($data = [], $context, Node $root = null, Node $parent = null)
+    final private function __construct($name, $data = [], $context, Node $root = null, Node $parent = null)
     {
+        $this->name = $name;
         $this->root = is_null($root) ? $this : $root;
         $this->parent = $parent;
         $this->data = new \ArrayIterator($data);
@@ -34,7 +36,10 @@ class Node implements \JsonSerializable
 
     public function set($field, $value)
     {
+        $this->initialized[$field] = null;
         $this->data->offsetSet($field, $value);
+
+        return $this;
     }
 
     public function get($field)
@@ -48,47 +53,47 @@ class Node implements \JsonSerializable
             $children = $this->data[$field];
         }
         $this->initialized[$field] = true;
-        $this->data[$field] = static::createNodeObject($children, $this->context, $this->root, $this);
+        $this->data[$field] = static::createNodeObject($field, $children, $this->context, $this->root, $this);
 
         return $this->data[$field];
     }
 
     /**
+     * @param $field
      * @param $node
      * @param $context
      * @param Node $root
      * @param Node $parent
      * @return mixed
      */
-    protected static function createNodeObject($node, $context = null, Node $root = null, Node $parent = null)
+    protected static function createNodeObject($field, $node, $context = null, Node $root = null, Node $parent = null)
     {
         if (is_object($node)) {
-            return new Node($node, $context, $root, $parent);
+            return new Node($field, $node, $context, $root, $parent);
         }
         if (is_array($node)) {
-            return new NodeCollection($node, $context, $root, $parent);
+            return new NodeCollection($field, $node, $context, $root, $parent);
         }
         return $node;
     }
 
     /**
-     * @param array $data
-     * @param null $context
+     * @param $context
      * @return mixed
      */
-    final public static function of($context = null)
+    public static function of($context = null)
     {
-        return static::createNodeObject(new \stdClass(), $context);
+        return static::createNodeObject('', new \stdClass(), $context);
     }
 
     final public static function ofData($data, $context = null)
     {
-        return static::createNodeObject($data, $context);
+        return static::createNodeObject('', $data, $context);
     }
 
     public function toArray()
     {
-        return $this->data->getArrayCopy();
+        return (object)$this->data->getArrayCopy();
     }
 
     /**
