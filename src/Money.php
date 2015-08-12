@@ -11,8 +11,8 @@ class Money extends JsonObject
     public function fieldTypeDefinition()
     {
         return [
-            'centAmount' => 'int',
-            'currencyCode' => 'string'
+            'centAmount' => [static::TYPE => 'int'],
+            'currencyCode' => [static::TYPE => 'string']
         ];
     }
 }

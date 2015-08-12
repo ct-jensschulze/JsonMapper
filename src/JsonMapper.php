@@ -12,7 +12,10 @@ class JsonMapper
      */
     public function map($data, $class = null)
     {
-        $node = Node::ofData(json_decode($data));
+        $node = $data;
+        if (!$data instanceof Node) {
+            $node = Node::ofData(json_decode($data));
+        }
         if (is_null($class)) {
             $class = '\Commercetools\Commons\JsonObject';
         }

@@ -11,6 +11,11 @@ use Commercetools\Commons\Json\Node;
 class JsonObject implements JsonObjectInterface, ContextAwareInterface
 {
     const JSON_OBJECT_INTERFACE = 'Commercetools\Commons\JsonObjectInterface';
+    const TYPE = 'type';
+    const OPTIONAL = 'optional';
+    const INITIALIZED = 'initialized';
+    const DECORATOR = 'decorator';
+    const ELEMENT_TYPE = 'elementType';
 
     use ContextTrait;
 
@@ -67,19 +72,34 @@ class JsonObject implements JsonObjectInterface, ContextAwareInterface
         throw new \BadMethodCallException();
     }
 
-    public function fieldTypeDefinition()
+    public function fieldDefinitions()
     {
         return [];
     }
 
-    protected function fieldType($field)
+    protected function fieldDefinition($field)
     {
-        $definitions = $this->fieldTypeDefinition();
+        $definitions = $this->fieldDefinitions();
         if (isset($definitions[$field])) {
             return $definitions[$field];
         }
 
         return null;
+    }
+
+    protected function fieldDefinitionValue($field, $key)
+    {
+        $definition = $this->fieldDefinition($field);
+        if (isset($definition[$key])) {
+            return $definition[$key];
+        }
+
+        return null;
+    }
+
+    protected function fieldType($field)
+    {
+        return $this->fieldDefinitionValue($field, static::TYPE);
     }
 
     protected function isPrimitiveType($type)
@@ -131,7 +151,7 @@ class JsonObject implements JsonObjectInterface, ContextAwareInterface
 
     public function set($field, $value)
     {
-        if ($value instanceof JsonObject) {
+        if ($value instanceof JsonObjectInterface) {
             $value = $value->toArray();
         }
         $this->data->set($field, $value);

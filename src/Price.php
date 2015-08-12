@@ -11,7 +11,7 @@ class Price extends JsonObject
     public function fieldTypeDefinition()
     {
         return [
-            'value' => '\Commercetools\Commons\Money'
+            'value' => [static::TYPE => '\Commercetools\Commons\Money']
         ];
     }
 }

@@ -2,12 +2,9 @@
 
 namespace Commercetools\Commons\Json;
 
-use Commercetools\Commons\Json\Node;
-
 class NodeCollection extends Node implements \Iterator, \Countable, \ArrayAccess
 {
     /**
-     * @param $context
      * @return mixed
      */
     public static function of()
