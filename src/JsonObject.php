@@ -10,27 +10,30 @@ use Commercetools\Commons\Json\Node;
 
 class JsonObject implements \JsonSerializable
 {
+    use ContextTrait;
+
     /**
      * @var Node
      */
     protected $data;
 
-    protected function __construct(Node $node = null)
+    protected function __construct(Node $node = null, ContextInterface $context = null)
     {
         if (is_null($node)) {
             $node = Node::of();
         }
+        $this->context = $context;
         $this->data = $node;
     }
 
-    public static function of()
+    final public static function of(ContextInterface $context = null)
     {
-        return new static();
+        return new static(null, $context);
     }
 
-    public static function ofNode(Node $node = null)
+    public static function ofNode(Node $node = null, ContextInterface $context = null)
     {
-        return new static($node);
+        return new static($node, $context);
     }
 
     public function __call($method, $arguments)
@@ -78,7 +81,7 @@ class JsonObject implements \JsonSerializable
     {
         $type = $this->fieldType($field);
         if (!$this->isPrimitiveType($type)) {
-            return new $type($this->data->get($field));
+            return new $type($this->data->get($field), $this->context);
         }
         return $this->data->get($field);
     }

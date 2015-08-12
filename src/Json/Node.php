@@ -9,15 +9,13 @@ class Node implements \JsonSerializable
     protected $parent;
     protected $data;
     protected $initialized = [];
-    protected $context;
 
-    final private function __construct($name, $data = [], $context, Node $root = null, Node $parent = null)
+    final private function __construct($name, $data = [], Node $root = null, Node $parent = null)
     {
         $this->name = $name;
         $this->root = is_null($root) ? $this : $root;
         $this->parent = $parent;
         $this->data = new \ArrayIterator($data);
-        $this->context = $context;
     }
 
     public function __call($method, $arguments)
@@ -53,7 +51,7 @@ class Node implements \JsonSerializable
             $children = $this->data[$field];
         }
         $this->initialized[$field] = true;
-        $this->data[$field] = static::createNodeObject($field, $children, $this->context, $this->root, $this);
+        $this->data[$field] = static::createNodeObject($field, $children, $this->root, $this);
 
         return $this->data[$field];
     }
@@ -66,13 +64,13 @@ class Node implements \JsonSerializable
      * @param Node $parent
      * @return mixed
      */
-    protected static function createNodeObject($field, $node, $context = null, Node $root = null, Node $parent = null)
+    protected static function createNodeObject($field, $node, Node $root = null, Node $parent = null)
     {
         if (is_object($node)) {
-            return new Node($field, $node, $context, $root, $parent);
+            return new Node($field, $node, $root, $parent);
         }
         if (is_array($node)) {
-            return new NodeCollection($field, $node, $context, $root, $parent);
+            return new NodeCollection($field, $node, $root, $parent);
         }
         return $node;
     }
@@ -81,14 +79,14 @@ class Node implements \JsonSerializable
      * @param $context
      * @return mixed
      */
-    public static function of($context = null)
+    public static function of()
     {
-        return static::createNodeObject('', new \stdClass(), $context);
+        return static::createNodeObject('', new \stdClass());
     }
 
-    final public static function ofData($data, $context = null)
+    final public static function ofData($data)
     {
-        return static::createNodeObject('', $data, $context);
+        return static::createNodeObject('', $data);
     }
 
     public function toArray()

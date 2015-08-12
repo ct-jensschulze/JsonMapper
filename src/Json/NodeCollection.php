@@ -10,9 +10,9 @@ class NodeCollection extends Node implements \Iterator, \Countable, \ArrayAccess
      * @param $context
      * @return mixed
      */
-    public static function of($context = null)
+    public static function of()
     {
-        return static::createNodeObject('', [], $context);
+        return static::createNodeObject('', []);
     }
 
     public function toArray()
