@@ -17,11 +17,11 @@ interface ContextAwareInterface
      * @param ContextInterface
      * @return mixed
      */
-    public function setContext($context = null);
+    public function setContext(ContextInterface $context = null);
 
     /**
      * @param ContextInterface
      * @return mixed
      */
-    public function setContextIfNull($context = null);
+    public function setContextIfNull(ContextInterface $context = null);
 }

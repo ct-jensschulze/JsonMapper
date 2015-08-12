@@ -8,14 +8,21 @@ namespace Commercetools\Commons;
 
 use Commercetools\Commons\Json\Node;
 
-class JsonObject implements \JsonSerializable
+class JsonObject implements JsonObjectInterface, ContextAwareInterface
 {
+    const JSON_OBJECT_INTERFACE = 'Commercetools\Commons\JsonObjectInterface';
+
     use ContextTrait;
 
     /**
      * @var Node
      */
     protected $data;
+
+    /**
+     * @var bool[]
+     */
+    protected static $interfaces = [];
 
     protected function __construct(Node $node = null, ContextInterface $context = null)
     {
@@ -26,12 +33,22 @@ class JsonObject implements \JsonSerializable
         $this->data = $node;
     }
 
+    /**
+     * @param $data
+     * @param ContextInterface $context
+     * @return mixed
+     */
+    public static function fromArray($data, $context = null)
+    {
+        return static::ofNode(Node::ofData($data), $context);
+    }
+
     final public static function of(ContextInterface $context = null)
     {
         return new static(null, $context);
     }
 
-    public static function ofNode(Node $node = null, ContextInterface $context = null)
+    final public static function ofNode(Node $node = null, ContextInterface $context = null)
     {
         return new static($node, $context);
     }
@@ -77,11 +94,37 @@ class JsonObject implements \JsonSerializable
         return isset($primitives[$type]);
     }
 
+    /**
+     * @param $type
+     * @param $interfaceName
+     * @return bool
+     * @internal
+     */
+    protected function hasInterface($type, $interfaceName)
+    {
+        $interfaceName = trim($interfaceName, '\\');
+        $cacheKey = $interfaceName . '-' . $type;
+        if (!isset(static::$interfaces[$cacheKey])) {
+            $interface = false;
+            if (
+                $this->isPrimitiveType($type) === false
+                && isset(class_implements($type)[$interfaceName])
+            ) {
+                $interface = true;
+            }
+            static::$interfaces[$cacheKey] = $interface;
+        }
+        return static::$interfaces[$cacheKey];
+    }
+
     public function get($field)
     {
         $type = $this->fieldType($field);
-        if (!$this->isPrimitiveType($type)) {
-            return new $type($this->data->get($field), $this->context);
+        if (!$this->isPrimitiveType($type) && $this->hasInterface($type, static::JSON_OBJECT_INTERFACE)) {
+            /**
+             * @var JsonObjectInterface $type
+             */
+            return $type::ofNode($this->data->get($field), $this->context);
         }
         return $this->data->get($field);
     }
