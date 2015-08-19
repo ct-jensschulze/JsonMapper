@@ -6,7 +6,6 @@ use Commercetools\Commons\Json\Node;
 use Commercetools\Commons\JsonMapper;
 use Commercetools\Commons\Money;
 use Commercetools\Commons\Price;
-use Commercetools\Commons\PriceCollection;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -57,21 +56,5 @@ class NodeSpec extends ObjectBehavior
     function it_has_magic_getters()
     {
         $this->getName()->getEn()->shouldReturn('John Doe');
-    }
-
-    function it_test()
-    {
-        $mapper = new JsonMapper();
-        $node = Node::ofData(json_decode('[{"value": {"centAmount": 100, "currency": "EUR"}}]'));
-        $start = microtime(true);
-        $d = $mapper->map($node, '\Commercetools\Commons\PriceCollection');
-        var_dump((microtime(true)-$start));
-
-
-        $d->set(null, Price::of()->setValue(Money::of()->setCentAmount(1000)->setCurrencyCode('USD')));
-        $d->set(null, Price::of()->setValue(Money::of()->setCentAmount(5000)->setCurrencyCode('EUR')));
-
-        var_dump(json_encode($d));
-        var_dump((microtime(true)-$start));
     }
 }

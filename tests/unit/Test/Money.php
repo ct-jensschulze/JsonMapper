@@ -3,12 +3,14 @@
  * @author @ct-jensschulze <jens.schulze@commercetools.de>
  */
 
-namespace Commercetools\Commons;
+namespace Commercetools\Commons\Test;
 
+
+use Commercetools\Commons\JsonObject;
 
 class Money extends JsonObject
 {
-    public function fieldTypeDefinition()
+    public function fieldDefinitions()
     {
         return [
             'centAmount' => [static::TYPE => 'int'],
