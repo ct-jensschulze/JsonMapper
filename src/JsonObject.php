@@ -140,17 +140,21 @@ class JsonObject implements JsonObjectInterface, ContextAwareInterface, \ArrayAc
     public function get($field)
     {
         $type = $this->fieldType($field);
-        if (!$this->isPrimitiveType($type)) {
+
+        $value = $this->data->get($field);
+        if (!is_null($value) && !$this->isPrimitiveType($type)) {
             if ($this->hasInterface($type, static::JSON_OBJECT_INTERFACE)) {
                 /**
                  * @var JsonObjectInterface $type
                  */
-                return $type::ofNode($this->data->get($field), $this->context);
-            } else {
-                return new $type($this->data->get($field));
+                return $type::ofNode($value, $this->context);
             }
+            if ($value instanceof $type) {
+                return $value;
+            }
+            return new $type($value);
         }
-        return $this->data->get($field);
+        return $value;
     }
 
     public function set($field, $value)
