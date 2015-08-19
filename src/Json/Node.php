@@ -40,7 +40,6 @@ class Node implements \JsonSerializable, \Iterator, \Countable, \ArrayAccess
     {
         $this->initialized[$field] = null;
         $this->data->offsetSet($field, $value);
-
         return $this;
     }
 
@@ -70,7 +69,7 @@ class Node implements \JsonSerializable, \Iterator, \Countable, \ArrayAccess
      */
     protected static function createNodeObject($field, $node, Node $root = null, Node $parent = null)
     {
-        if (is_object($node)) {
+        if ($node instanceof \stdClass) {
             return new Node($field, $node, $root, $parent);
         }
         if (is_array($node)) {

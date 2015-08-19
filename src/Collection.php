@@ -20,9 +20,9 @@ class Collection extends JsonObject implements \Iterator, \Countable
         parent::__construct($node, $context);
     }
 
-    protected function fieldDefinitionValue($field)
+    protected function fieldType($field)
     {
-        return [static::TYPE => $this->type];
+        return $this->type;
     }
 
     /**
@@ -33,7 +33,7 @@ class Collection extends JsonObject implements \Iterator, \Countable
      */
     public function current()
     {
-        return $this->data->current();
+        return $this->get($this->data->key());
     }
 
     /**

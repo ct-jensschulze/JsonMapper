@@ -89,4 +89,11 @@ class NodeCollectionSpec extends ObjectBehavior
         $this->shouldHaveCount(1);
         $this->get(1)->getName()->getEn()->shouldReturn('Jane Doe');
     }
+
+    function it_returns_datetime()
+    {
+        $this->beConstructedThrough('of');
+        $this->set(null, new \DateTime());
+        $this->get(0)->shouldHaveType('\DateTime');
+    }
 }
