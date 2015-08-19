@@ -12,7 +12,7 @@ class Collection extends JsonObject
 {
     protected $type;
 
-    protected function __construct(NodeCollection $node = null, ContextInterface $context = null)
+    public function __construct(NodeCollection $node = null, ContextInterface $context = null)
     {
         if (is_null($node)) {
             $node = NodeCollection::of();

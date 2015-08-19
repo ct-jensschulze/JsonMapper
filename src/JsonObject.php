@@ -29,7 +29,7 @@ class JsonObject implements JsonObjectInterface, ContextAwareInterface
      */
     protected static $interfaces = [];
 
-    protected function __construct(Node $node = null, ContextInterface $context = null)
+    public function __construct(Node $node = null, ContextInterface $context = null)
     {
         if (is_null($node)) {
             $node = Node::of();
